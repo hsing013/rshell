@@ -27,7 +27,18 @@ orConnector::orConnector(Base* a, Base* b){
 }
 
 bool orConnector::execute(bool b){
-    
+  bool result = b;
+  bool result2 = false;
+  if (b){
+    result2 = child2->execute(false);
+  }
+  else if (child1->execute(false)){
+    return true;
+  }
+  else if (child2->execute(false)){
+    return true;
+  }
+  return (result || result2);
 }
 
 noneConnector::noneConnector(Base* a){

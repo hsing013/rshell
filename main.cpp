@@ -6,11 +6,13 @@
 #include <stdio.h> // for perror
 #include <errno.h>
 #include <stdlib.h> // for exit
-
+#include <vector>
+#include <queue>
 #include "base.h"
 #include "connectors.h"
 using namespace std;
 
+void execution(string input); // carrys out the execution of the input
 
 
 int main(){
@@ -19,7 +21,6 @@ int main(){
     string input;
     cout << "$ ";
     getline(cin, input);
-
     if (input == "exit"){
       exit(0);
     }
@@ -43,8 +44,19 @@ int main(){
     // }
     
     Executable* e = new Executable(size, argv);
+    Executable* e2 = new Executable(size, argv);
+
     noneConnector* nc = new noneConnector(e);
     cout << nc->execute(false) << endl;
+
+    andConnector* ac = new andConnector(e, e2);
+    cout << ac->execute(false) << endl;
+
+    orConnector* oc = new orConnector(e, e2);
+    cout << oc->execute(false) << endl;
+
+    
+
     
     
     // execvp(argv[0], argv);
@@ -55,3 +67,7 @@ int main(){
   }
 }
 
+void execution(string input){
+  vector<Base*> execs; //holds the executables;
+  vector<Base*> connect; //holds the connectors;
+}
