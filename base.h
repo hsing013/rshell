@@ -3,12 +3,13 @@
 
 class Base{
   public:
-   Base();
+   Base() {};
    virtual void execution() = 0;
-   virtual char* cmdReturn() = 0; //returns char* cmd
+   virtual char* getCMD() = 0; //returns char* cmd
    virtual char* at(int index) = 0; //return a char* at x index
-   virtual int sizerReturn() = 0; //returns the size of argv
-   virtual void setSuccess() = 0;
+   virtual int getSize() = 0; //returns the size of argv
+   virtual void setSuccess(bool b) = 0;
+   virtual bool getSuccess() = 0;
 };
 
 
@@ -21,22 +22,24 @@ class Executable : public Base{
   public:
     Executable(char* cmd, int size, char* argv[]);
     void execution(); 
-    char* cmdReturn(); //returns char* cmd
+    char* getCMD(); //returns char* cmd
     char* at(int index); //return a char* at x index
-    int sizerReturn(); //returns the size of argv
-    void setSuccess();
+    int getSize(); //returns the size of argv
+    void setSuccess(bool b);
+    bool getSuccess();
 };
 
 class Single : public Base{
   private: 
-    Executable* child;
+    Base* child;
   public:
-    Single(Executable* b);
+    Single(Base* b);
     void execution();
-    char* cmdReturn(); //returns char* cmd
+    char* getCMD(); //returns char* cmd
     char* at(int index); //return a char* at x index
-    int sizerReturn(); //returns the size of argv
-    void setSuccess();
+    int getSize(); //returns the size of argv
+    void setSuccess(bool b);
+    bool getSuccess(); 
 };
 
 #endif
