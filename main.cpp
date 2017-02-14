@@ -5,7 +5,10 @@
 #include <unistd.h> //for execvp
 #include <stdio.h> // for perror
 #include <errno.h>
+#include <stdlib.h> // for exit
+
 #include "base.h"
+#include "connectors.h"
 using namespace std;
 
 
@@ -16,11 +19,17 @@ int main(){
     string input;
     cout << "$ ";
     getline(cin, input);
+
+    if (input == "exit"){
+      exit(0);
+    }
+
     int size = input.size();
     char* argv[size + 1];
     char* c = const_cast<char*>(input.c_str()); // makes the string volatile to put into char* c
     char* tok = strtok(c, " ");
-    int i = 0; 
+    int i = 0;
+
     while (tok != NULL){
       argv[i] = tok;
       tok = strtok(NULL, " ");
@@ -32,18 +41,17 @@ int main(){
     // for(unsigned i = 0; i < size; ++i){
     //   cout << argv[i] << " ";
     // }
-    tok = argv[0];
-    Executable* b = new Executable(tok, size, argv);
-    Single* sing = new Single(b);
-    sing->execution();
-    return 0;
-    // execvp(tok, argv);
+    
+    Executable* e = new Executable(size, argv);
+    noneConnector* nc = new noneConnector(e);
+    cout << nc->execute(false) << endl;
+    
+    
+    // execvp(argv[0], argv);
     // if(-1 == execvp(tok, argv)){
     //   perror("execvp failed ");
     // }
     
   }
-
-  return 0;
 }
 
