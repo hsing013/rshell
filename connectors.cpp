@@ -18,7 +18,7 @@ bool andConnector::execute(bool b){
     result = child1->execute(false);
     result2 = child2->execute(false);
   }
-  return (result && result2);
+  return result && result2;
 }
 
 orConnector::orConnector(Base* a, Base* b){
@@ -30,10 +30,10 @@ bool orConnector::execute(bool b){
   bool result = b;
   bool result2 = false;
   if (b){
-    result2 = child2->execute(false);
+    return false;
   }
   else if (child1->execute(false)){
-    return true;
+    return false;
   }
   else if (child2->execute(false)){
     return true;

@@ -18,7 +18,7 @@ void execution(string input); // carrys out the execution of the input
 
 
 int main(){
-  bool run = true; // true until user wants to exit where it becomes false
+  bool run = true; // true until user wants to exit 
   while (run){
     string input;
     struct passwd* pass = getpwuid(getuid()); //gets the user name
@@ -29,17 +29,14 @@ int main(){
     char machineName[200];
     gethostname(machineName, sizeof machineName);
 
-
     cout << userName << "@" << machineName << ":~$ ";
+
     getline(cin, input);
+
     if (input == "exit"){
       exit(0);
     }
     execution(input);
-    // execvp(argv[0], argv);
-    // if(-1 == execvp(tok, argv)){
-    //   perror("execvp failed ");
-    // } 
   }
 }
 
@@ -104,15 +101,30 @@ void execution(string input){
   }
   bool previousResult = false; //holds the output of the last command, initial is false
   j = 0;
-  for (unsigned i = 0; i < execs.size(); ++i){ //NEED TO IMPLEMENT DECONSTRUCTORS!!!
+  for (unsigned i = 0; i < execs.size(); ++i, ++j){ //NEED TO IMPLEMENT DECONSTRUCTORS!!!
     if (connect.at(i) == ";"){
-      noneConnector* nc = new noneConnector(execs.at(i));
+      noneConnector* nc = new noneConnector(execs.at(j));
       nc->execute(previousResult);
       previousResult = false;
     }
     else if (connect.at(i) == "&&"){
-      andConnector* ac = new andConnector(execs.at(i), execs.at(i + 1));
+      if (i + 1 == execs.size()){
+        cout << "Your input is incomplete e.g(echo hello &&   )" << endl;
+        break;
+      }
+      andConnector* ac = new andConnector(execs.at(j), execs.at(j + 1));
       previousResult = ac->execute(previousResult);
+      // ++j;
+    }
+    else if (connect.at(i) == "||"){
+      if (i + 1 == execs.size()){
+        cout << "Your input is incomplete e.g(echo hello ||   )" << endl;
+        break;
+      }
+      orConnector* oc = new orConnector(execs.at(j), execs.at(j + 1));
+      previousResult = oc->execute(previousResult);
+      ++j;
+      ++i;
     }
   }
 
