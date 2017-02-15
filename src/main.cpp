@@ -16,6 +16,7 @@ using namespace std;
 
 void execution(string input); // carrys out the execution of the input
 void commentCheck(string &input); //checks for a comment symbol #
+void semicolonExtend(string &input);
 
 int main(){
   bool run = true; // true until user wants to exit 
@@ -37,6 +38,7 @@ int main(){
       exit(0);
     }
     commentCheck(input);
+    semicolonExtend(input);
     execution(input);
   }
 }
@@ -142,4 +144,24 @@ void commentCheck(string &input){
     }
   }
   // cout << input << endl;
+}
+
+/*finds any semicolon and adds a
+space before it so it is alone.
+this enables the parsing algorithm
+to work properly */
+void semicolonExtend(string &input){
+ char semicolon = ';';
+ vector<int> index;  // holds where semicolon appears
+ for (unsigned i = 0; i < input.size(); ++i){
+   if(input.at(i) == semicolon){
+     index.push_back(i);
+   }
+ }
+ for (unsigned i = 0; i < index.size(); ++i){
+   input.insert(index.at(i), " ");
+   if (i + 1 != index.size()){
+     index.at(i + 1) += 1;
+   }
+ }
 }
