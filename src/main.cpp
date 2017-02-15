@@ -25,10 +25,10 @@ int main(){
     struct passwd* pass = getpwuid(getuid()); //gets the user name
     char* userName = pass->pw_name;
     if(userName == NULL){
-      perror("getlogin() error");
+      perror("getpwuid(getuid) error");
     }
     char machineName[200];
-    gethostname(machineName, sizeof machineName);
+    gethostname(machineName, sizeof machineName); // gets the machine name 
 
     cout << userName << "@" << machineName << ":~$ ";
 
@@ -53,8 +53,9 @@ void execution(string input){
   temp[0] = "&&";
   temp[1] = "||";
   temp[2] = ";";
-  char* args[input.size() + 1];
-  char* c = const_cast<char*>(input.c_str()); // makes the string volatile to put into char* c
+  int sizeOfArray = input.size() + 1;
+  char** args = new char*[sizeOfArray];
+  char* c = const_cast<char*>(input.c_str()); // makes the string volatile to put into char* cs
   char* tok = strtok(c, " "); // using strtok to break the input
   unsigned i = 0;
   while (tok != NULL){
@@ -62,12 +63,12 @@ void execution(string input){
     tok = strtok(NULL, " ");
     ++i;
   }
-  char* argc[100]; // temporary holds a command and its arguements
+  char** argc = new char*[100]; // temporary holds a command and its arguements
   bool counter = false; // remains true until next command is found
   args[i] = NULL;
   int size = i + 1; //holds the size of the array
   int j = 0;
-  for (i = 0; i < size; ++i){ // makes each command and its arguements into an Executable
+  for (int i = 0; i < size; ++i){ // makes each command and its arguements into an Executable
     c = args[i];
     if (!counter){
       argc[j] = c;
@@ -102,6 +103,9 @@ void execution(string input){
       ++j;
     }
   }
+  delete[] args; //deallocate memory
+  delete[] argc; //deallocate memory
+  vector<Base*> destroy; // holds connectors that are to be destroyed later
   bool previousResult = false; //holds the output of the last command, initial is false
   j = 0;
   for (unsigned i = 0; i < execs.size(); ++i, ++j){ //NEED TO IMPLEMENT DECONSTRUCTORS!!!
@@ -109,6 +113,7 @@ void execution(string input){
       noneConnector* nc = new noneConnector(execs.at(j));
       nc->execute(previousResult);
       previousResult = false;
+      destroy.push_back(nc);
     }
     else if (connect.at(i) == "&&"){
       if (i + 1 == execs.size()){
@@ -117,7 +122,7 @@ void execution(string input){
       }
       andConnector* ac = new andConnector(execs.at(j), execs.at(j + 1));
       previousResult = ac->execute(previousResult);
-      // ++j;
+      destroy.push_back(ac);
     }
     else if (connect.at(i) == "||"){
       if (i + 1 == execs.size()){
@@ -128,7 +133,15 @@ void execution(string input){
       previousResult = oc->execute(previousResult);
       ++j;
       ++i;
+      destroy.push_back(oc);
     }
+  }
+  connect.resize(0);
+  for (unsigned i = 0; i < execs.size(); ++i){ //deallocates memory
+    delete execs.at(i);
+  }
+  for (unsigned i = 0; i < destroy.size(); ++i){ //deallocate memory
+    delete destroy.at(i);
   }
 
 }

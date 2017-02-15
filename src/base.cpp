@@ -14,6 +14,7 @@ Executable::Executable(int size, char* argv[]){
   this->ran = false;
   this->size = size;
   int i = 0;
+  args = new char*[500];
   for (i = 0; i < size; ++i){
     this->args[i] = argv[i];
   }
@@ -21,6 +22,10 @@ Executable::Executable(int size, char* argv[]){
   // for (unsigned i = 0; i < size; ++i){
   //   cout << args[i] << " ";
   // }
+}
+
+Executable::~Executable(){
+  delete[] args;
 }
 
 bool Executable::execute(bool b){

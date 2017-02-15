@@ -7,6 +7,7 @@ andConnector::andConnector(Base* a, Base* b){
     child1 = a;
     child2 = b;
 }
+andConnector::~andConnector(){}
 
 bool andConnector::execute(bool b){
   bool result = b;
@@ -26,6 +27,8 @@ orConnector::orConnector(Base* a, Base* b){
   child2 = b;
 }
 
+orConnector::~orConnector(){}
+
 bool orConnector::execute(bool b){
   bool result = b;
   bool result2 = false;
@@ -44,6 +47,7 @@ bool orConnector::execute(bool b){
 noneConnector::noneConnector(Base* a){
   child1 = a;
 }
+noneConnector::~noneConnector(){}
 bool noneConnector::execute(bool b){
   bool result = child1->execute(false);
   return result;
