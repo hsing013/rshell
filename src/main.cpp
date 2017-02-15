@@ -15,7 +15,7 @@
 using namespace std;
 
 void execution(string input); // carrys out the execution of the input
-
+void commentCheck(string &input); //checks for a comment symbol #
 
 int main(){
   bool run = true; // true until user wants to exit 
@@ -36,6 +36,7 @@ int main(){
     if (input == "exit"){
       exit(0);
     }
+    commentCheck(input);
     execution(input);
   }
 }
@@ -64,7 +65,7 @@ void execution(string input){
   args[i] = NULL;
   int size = i + 1; //holds the size of the array
   int j = 0;
-  for (i = 0; i < size; ++i){
+  for (i = 0; i < size; ++i){ // makes each command and its arguements into an Executable
     c = args[i];
     if (!counter){
       argc[j] = c;
@@ -128,4 +129,17 @@ void execution(string input){
     }
   }
 
+}
+/*checks for comment symbol, if found
+then it deletes the substring from the 
+comment symbol to the end */
+void commentCheck(string &input){
+  char comment = '#';
+  for (unsigned i = 0; i < input.size(); ++i){
+    if (input.at(i) == comment){
+      input.replace(i, input.size() - (i), "");
+      break;
+    }
+  }
+  // cout << input << endl;
 }
