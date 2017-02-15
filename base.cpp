@@ -13,7 +13,7 @@ using namespace std;
 Executable::Executable(int size, char* argv[]){
   this->ran = false;
   this->size = size;
-  unsigned i = 0;
+  int i = 0;
   for (i = 0; i < size; ++i){
     this->args[i] = argv[i];
   }
@@ -27,6 +27,10 @@ bool Executable::execute(bool b){
   if (ran){
     return false;
   }
+  else {
+    this->ran = true; //sets if it has been ran or not
+  }
+  
   pid_t pid = fork();
 
   if (pid == -1){ //to handle fork error
