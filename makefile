@@ -1,8 +1,10 @@
-
-all: main.cpp base.cpp base.h connectors.cpp connectors.h
+all:
 	mkdir -p bin
-	g++ -Wall -Werror -ansi -pedantic main.cpp base.cpp connectors.cpp -o ${PWD}/bin/rshell
+	g++ -Wall -Werror -ansi -pedantic ${PWD}/src/main.cpp ${PWD}/src/base.cpp ${PWD}/src/connectors.cpp -o ${PWD}/bin/rshell
 
-rshell: main.cpp base.cpp base.h connectors.cpp connectors.h
+rshell:
 	mkdir -p bin
-	g++ -Wall -Werror -ansi -pedantic main.cpp base.cpp connectors.cpp -o ${PWD}/bin/rshell
+	g++ -Wall -Werror -ansi -pedantic ${PWD}/src/base.cpp -o ${PWD}/bin/rshell
+
+clean:
+		rm -rf ${PWD}/bin
