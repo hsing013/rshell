@@ -12,7 +12,6 @@ using namespace std;
 
 
 Executable::Executable(int size, char* argv[]){
-  // cout << "HOOPLA" << endl;
   this->ran = false;
   this->size = size;
   int i = 0;
@@ -21,15 +20,14 @@ Executable::Executable(int size, char* argv[]){
     this->args[i] = argv[i];
   }
   args[i] = NULL;
-  // for (i = 0; i < size; ++i){
-  //   cout << args[i] << " " << endl;
-  // }
 }
 
 Executable::~Executable(){
   delete[] args;
 }
 
+/*executes the command using
+execvp, fork and waitpid */
 bool Executable::execute(bool b){
   if (ran){
     return false;
@@ -38,11 +36,11 @@ bool Executable::execute(bool b){
     this->ran = true; //sets if it has been ran or not
   }
   
-  if (strcmp(args[0], "exit") == 0){
+  if (strcmp(args[0], "exit") == 0){ // if the command is exit, it exits
     exit(0);
   }
 
-  pid_t pid = fork();
+  pid_t pid = fork(); //creates child process
 
   if (pid == -1){ //to handle fork error
     perror("fork");
