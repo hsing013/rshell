@@ -5,12 +5,14 @@
 #include <errno.h>
 #include <sys/types.h> 
 #include <sys/wait.h> //for waitpid
+#include <stdlib.h> // for exit
 #include "base.h"
 using namespace std;
 
 
 
 Executable::Executable(int size, char* argv[]){
+  // cout << "HOOPLA" << endl;
   this->ran = false;
   this->size = size;
   int i = 0;
@@ -19,8 +21,8 @@ Executable::Executable(int size, char* argv[]){
     this->args[i] = argv[i];
   }
   args[i] = NULL;
-  // for (unsigned i = 0; i < size; ++i){
-  //   cout << args[i] << " ";
+  // for (i = 0; i < size; ++i){
+  //   cout << args[i] << " " << endl;
   // }
 }
 
@@ -36,6 +38,10 @@ bool Executable::execute(bool b){
     this->ran = true; //sets if it has been ran or not
   }
   
+  if (strcmp(args[0], "exit") == 0){
+    exit(0);
+  }
+
   pid_t pid = fork();
 
   if (pid == -1){ //to handle fork error

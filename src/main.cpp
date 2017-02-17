@@ -32,13 +32,15 @@ int main(){
 
     cout << userName << "@" << machineName << ":~$ ";
 
-    getline(cin, input);
+    getline(cin, input); // gets input
 
-    if (input == "exit"){
-      exit(0);
-    }
-    commentCheck(input);
+    commentCheck(input); 
     semicolonExtend(input);
+
+    if (input == "exit"){ // checks if user inputed exit
+      return 0;
+    }
+
     execution(input);
   }
 }
@@ -46,6 +48,9 @@ int main(){
 /*parses the input and then executes each
 command */
 void execution(string input){
+  if (input.size() == 0){ // returns if input is 0
+    return;
+  }
   vector<Base*> execs; //holds the executables;
   vector<string> connect; //holds the connectors;
 
@@ -75,24 +80,28 @@ void execution(string input){
       counter = true;
       ++j;
     }
-    else if (c == NULL){
+    else if (c == NULL){ // makes an Executable that has no connector
+      argc[j + 1] = NULL;
       execs.push_back(new Executable(j, argc));
       connect.push_back(";");
       break;
     }
-    else if (strcmp(c, temp[1]) == 0){
+    else if (strcmp(c, temp[1]) == 0){ // makes an Executable that has the orConnector
+      argc[j + 1] = NULL;
       execs.push_back(new Executable(j, argc));
       connect.push_back("||");
       counter = false;
       j = 0;
     }
-    else if (strcmp(c, temp[2]) == 0){
+    else if (strcmp(c, temp[2]) == 0){ // makes an Executable that has a semicolon connecter
+      argc[j + 1] = NULL;
       execs.push_back(new Executable(j, argc));
       connect.push_back(";");
       counter = false;
       j = 0;
     }
-    else if(strcmp(c, temp[0]) == 0){
+    else if(strcmp(c, temp[0]) == 0){ // makes an Executable that has andConnector
+      argc[j + 1] = NULL;
       execs.push_back(new Executable(j, argc));
       connect.push_back("&&");
       counter = false;
@@ -108,14 +117,14 @@ void execution(string input){
   vector<Base*> destroy; // holds connectors that are to be destroyed later
   bool previousResult = false; //holds the output of the last command, initial is false
   j = 0;
-  for (unsigned i = 0; i < execs.size(); ++i, ++j){ //NEED TO IMPLEMENT DECONSTRUCTORS!!!
-    if (connect.at(i) == ";"){
+  for (unsigned i = 0; i < execs.size(); ++i, ++j){ 
+    if (connect.at(i) == ";"){ //executes noneConnector commands
       noneConnector* nc = new noneConnector(execs.at(j));
       nc->execute(previousResult);
       previousResult = false;
       destroy.push_back(nc);
     }
-    else if (connect.at(i) == "&&"){
+    else if (connect.at(i) == "&&"){ // executes andConnector commands
       if (i + 1 == execs.size()){
         cout << "Your input is incomplete e.g(echo hello &&   )" << endl;
         break;
@@ -124,7 +133,7 @@ void execution(string input){
       previousResult = ac->execute(previousResult);
       destroy.push_back(ac);
     }
-    else if (connect.at(i) == "||"){
+    else if (connect.at(i) == "||"){ // executes orConnector commands
       if (i + 1 == execs.size()){
         cout << "Your input is incomplete e.g(echo hello ||   )" << endl;
         break;

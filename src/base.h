@@ -11,7 +11,7 @@ class Base{
 };
 
 class Executable : public Base{
-  private:
+  protected:
     int size;
     bool ran; //false if is not been executed, true if otherwise
     char** args;
