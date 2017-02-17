@@ -1,0 +1,7 @@
+ls -a && echo hello
+ls -a || echo hello
+ls -a; echo world || echo man && echo linux; echo Oi!
+ls || echo boy && echo man
+git status && echo name || echo handsomeBoy
+echo hello || echo bill || echo gates || echo Microsoft
+echo hello && echo steve && echo jobs && echo Apple

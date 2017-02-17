@@ -1,0 +1,5 @@
+echo hello#exit
+echo hello #&& echo LLIB SETAG
+ls -a#
+ls #-a && echo #
+echo # boy oh boy

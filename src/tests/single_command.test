@@ -1,0 +1,7 @@
+ls -a;  #ls all with semi colon
+echo Bill Gates; #print out Bill Gates
+echo hello world; # print out hello world with semi colon
+ls -a   #w/o semi colon
+echo Bill Gates    #w/o semi colon 
+echo hello word    #/w/0 semi colon
+

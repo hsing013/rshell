@@ -1,0 +1,11 @@
+exit #will exit
+#exit # nothing will happen
+ls -a && exit #will ls -a and then exit
+ls -a || exit
+echo world#exit
+ls -a # exit
+ls -a exit #will result in execvp error
+exit && ls -a #will exit before executing ls -a
+echo world; echo top && echo of || exit; echo exit
+echo world: echo top || echo of && exit; echo exit
+ls -a; exit #will exit after ls -a execution
