@@ -1,3 +1,3 @@
 #!/bin/rshell
 
-../bin/rshell < exit_command.test
+../bin/rshell < exit_test
