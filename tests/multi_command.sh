@@ -1,2 +1,2 @@
 #!/bin/bash
-../bin/rshell < multiple_test
+../bin/rshell < multi_test

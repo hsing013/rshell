@@ -3,3 +3,6 @@ echo hello #&& echo LLIB SETAG
 ls -a#
 ls #-a && echo #
 echo # boy oh boy
+mkdir# testable
+rm #-r
+exit

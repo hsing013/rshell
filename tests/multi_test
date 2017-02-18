@@ -5,3 +5,8 @@ ls || echo boy && echo man
 git status && echo name || echo handsomeBoy
 echo hello || echo bill || echo gates || echo Microsoft
 echo hello && echo steve && echo jobs && echo Apple
+mkdir testable && rm -r testable
+mkdir testable && rm -r testable || touch blah && rm blah
+echo magic && echo hogwarts || echo speed && history
+mkdir && ls Bill && ps
+exit
