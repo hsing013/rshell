@@ -42,7 +42,7 @@ Features
 
 Bugs
 ---
--If incomplete statements such as "echo hello ||" are inputed, then it throws an error.
+-If incomplete statements such as "echo hello ||" are inputted, then it throws an error.
 
 -If one symbol is used, for example "ls -a | echo hello", it will make everything past ls its arguements.
 
