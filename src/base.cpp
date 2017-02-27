@@ -49,11 +49,12 @@ bool Executable::execute(bool b){
   else if (pid == 0){ //child process
     execvp(args[0], args);
     perror("execvp");
-    return false;
+    exit(0);
   }
   else if(pid > 0){
     int status;
     if(waitpid(pid, &status, 0) == -1){ //makes the parent process wait
+      cout << "wait" << endl;
       perror("waitpid");
     }
   }

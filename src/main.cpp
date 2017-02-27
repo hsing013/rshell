@@ -17,6 +17,8 @@ using namespace std;
 void execution(string input); // carrys out the execution of the input
 void commentCheck(string &input); //checks for a comment symbol #
 void semicolonExtend(string &input);
+bool checkInput(string &input, char c, char c2); //checks if the amount of parantheses is correct and the amount of brackets
+
 
 int main(){
   bool run = true; // true until user wants to exit 
@@ -33,14 +35,23 @@ int main(){
     cout << userName << "@" << machineName << ":~$ ";
 
     getline(cin, input); // gets input
-
     commentCheck(input); 
+    bool boolean = checkInput(input, '(', ')'); //checks parantheses
+    if (!boolean){
+      cout << "You have entered the wrong amount of parantheses. Try again." << endl << endl;
+      continue;
+    }
+    boolean = checkInput(input, '[' , ']'); //checks brackets
+    if (!boolean){
+      cout << "You have entered the wrong amount of brackets. Try again." << endl << endl;
+      continue;
+    }
     semicolonExtend(input);
-
     if (input == "exit"){ // checks if user inputed exit
       return 0;
+      return 0;
+      return 0;
     }
-
     execution(input);
   }
 }
@@ -187,3 +198,21 @@ void semicolonExtend(string &input){
    }
  }
 }
+
+bool checkInput(string &input, char c, char c2){
+  int count = 0; //keeps count of '('
+  int count2 = 0; //keeps count of ')'
+  for (unsigned i = 0; i < input.size(); ++i){
+    if (input.at(i) == c){
+      ++count;
+    }
+    else if (input.at(i) == c2){
+      ++count2;
+    }
+  }
+  if (count - count2 != 0){
+    return false;
+  }
+  return true;
+}
+
