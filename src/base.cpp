@@ -4,6 +4,7 @@
 #include <stdio.h> // for perror
 #include <errno.h>
 #include <sys/types.h> 
+#include <sys/stat.h> // for struct stat
 #include <sys/wait.h> //for waitpid
 #include <stdlib.h> // for exit
 #include "base.h"
@@ -29,6 +30,7 @@ Executable::~Executable(){
 /*executes the command using
 execvp, fork and waitpid */
 bool Executable::execute(bool b){
+  bool ret = true;
   if (ran){
     return false;
   }
@@ -44,21 +46,42 @@ bool Executable::execute(bool b){
 
   if (pid == -1){ //to handle fork error
     perror("fork");
-    return false;
+    ret = false;
   }
   else if (pid == 0){ //child process
-    execvp(args[0], args);
-    perror("execvp");
-    exit(0);
+    if (execvp(args[0], args) == -1){
+      perror("execvp");
+      ret = false;
+      exit(1);
+    }
   }
   else if(pid > 0){
     int status;
     if(waitpid(pid, &status, 0) == -1){ //makes the parent process wait
-      cout << "wait" << endl;
       perror("waitpid");
     }
+    if (WEXITSTATUS(status) != 0){
+      ret = false;
+    }
   }
-  return true;
+  // cout << "ret: " << ret << endl;
+  return ret;
 }
 
+Test::Test(int size, char* argv[]){
+  this->ran = false;
+  this->size = size;
+  int i = 0;
+  args = new char*[500];
+  for (i = 0; i < size; ++i){
+    this->args[i] = argv[i];
+  }
+  args[i] = NULL;
+}
 
+Test::~Test(){
+  delete[] args;
+}
+bool Test::execute(bool b){
+  return true;
+}

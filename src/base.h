@@ -21,5 +21,15 @@ class Executable : public Base{
     bool execute(bool b);
 };
 
+class Test : public Base{
+  private:
+    int size;
+    bool ran;
+    char** args;
+  public:
+    Test(int size, char* argv[]);
+    ~Test();
+    bool execute(bool b);
+};
 
 #endif

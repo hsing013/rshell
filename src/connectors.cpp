@@ -21,7 +21,9 @@ bool andConnector::execute(bool b){
   }
   else{
     result = child1->execute(false);
-    result2 = child2->execute(false);
+    if(result != false){
+      result2 = child2->execute(false);
+    }
   }
   return result && result2;
 }
@@ -41,7 +43,7 @@ indicates that child1 has been executed */
 bool orConnector::execute(bool b){
   bool result = b;
   bool result2 = false;
-  if (b){
+  if (result){
     return false;
   }
   else if (child1->execute(false)){
