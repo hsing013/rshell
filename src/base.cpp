@@ -83,5 +83,56 @@ Test::~Test(){
   delete[] args;
 }
 bool Test::execute(bool b){
-  return true;
+  int i = 0;
+  string flag;
+  for (i = 0; i < size; ++i){
+    if (strcmp(args[i], "-e") == 0){
+      break;
+    }
+    else if (strcmp(args[i], "-f") == 0){
+      break;
+    }
+    else if (strcmp(args[i], "-d") == 0){
+      break;
+    }
+  }
+  if (i >= size - 1){
+    i = -1;
+  }
+  else{
+    flag = args[i];
+    // cout << "f: " << flag << endl;
+  }
+  struct stat sb;
+  int status = stat(args[i + 1], &sb);
+  if (status == -1){
+    perror("stat");
+    cout << "(False)" << endl;
+    return false;
+  }
+  if (flag == "-d"){
+    if (S_ISDIR(sb.st_mode)){
+      cout << "(TRUE)" << endl;
+      return true;
+    }
+    else{
+      cout << "(False)" << endl;
+      return false;
+    }
+  }
+  else if (flag == "-f"){
+    if (S_ISREG(sb.st_mode)){
+      cout << "(TRUE)" << endl;
+      return true;
+    }
+    else{
+      cout << "(False)" << endl;
+      return false;
+    }
+  }
+  else {
+    cout << "(TRUE)" << endl;
+    return true;
+  }
+  return false;
 }

@@ -224,19 +224,19 @@ space before it so it is alone.
 this enables the parsing algorithm
 to work properly */
 void semicolonExtend(string &input){
- char semicolon = ';';
- vector<int> index;  // holds where semicolon appears
- for (unsigned i = 0; i < input.size(); ++i){
-   if(input.at(i) == semicolon){
+  char semicolon = ';';
+  vector<int> index;  // holds where semicolon appears
+  for (unsigned i = 0; i < input.size(); ++i){
+    if(input.at(i) == semicolon){
      index.push_back(i);
-   }
- }
- for (unsigned i = 0; i < index.size(); ++i){
-   input.insert(index.at(i), " ");
-   if (i + 1 != index.size()){
-     index.at(i + 1) += 1;
-   }
- }
+    }
+  }
+  for (unsigned i = 0; i < index.size(); ++i){
+    input.insert(index.at(i), " ");
+    if (i + 1 != index.size()){
+      index.at(i + 1) += 1;
+    }
+  }
 }
 
 bool checkInput(string &input, char c, char c2){

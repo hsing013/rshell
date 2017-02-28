@@ -7,12 +7,14 @@ using namespace std;
 
 int main(){
   struct stat sb;
-  string input = "/home/harsh/Desktop/CS_100/rshell/src/";
+  string input = "/hom/harsh/Desktop/CS_100/rshell/src/";
   // char const* argv[2];
   // argv[0] = "Desktop/CS_100/rshell/src/main.cpp";
   // argv[1] = "rshell";
   int status = stat(input.c_str(), &sb);
-  perror("stat");
+  if (status == -1){
+    perror("stat");
+  }
   cout << status << endl;
   if(S_ISDIR(sb.st_mode)){
     cout << "Hoopla" << endl;
