@@ -3,6 +3,7 @@
 #include <unistd.h> //for execvp
 #include <stdio.h> // for perror
 #include <errno.h>
+#include <queue>
 #include <sys/types.h> 
 #include <sys/stat.h> // for struct stat
 #include <sys/wait.h> //for waitpid
@@ -12,9 +13,11 @@ using namespace std;
 
 
 
-Executable::Executable(int size, char* argv[]){
+Executable::Executable(int size, char* argv[], bool preced, queue<string> &q){
   this->ran = false;
   this->size = size;
+  this->preced = preced;
+  this->q = q;
   int i = 0;
   args = new char*[500];
   for (i = 0; i < size; ++i){
@@ -68,9 +71,11 @@ bool Executable::execute(bool b){
   return ret;
 }
 
-Test::Test(int size, char* argv[]){
+Test::Test(int size, char* argv[], bool preced, queue<string> &q){
   this->ran = false;
   this->size = size;
+  this->preced = preced;
+  this->q = q;
   int i = 0;
   args = new char*[500];
   for (i = 0; i < size; ++i){
