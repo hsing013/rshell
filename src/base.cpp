@@ -9,15 +9,15 @@
 #include <sys/wait.h> //for waitpid
 #include <stdlib.h> // for exit
 #include "base.h"
+#include "executioner.h"
 using namespace std;
 
+extern queue<string> Q;
 
-
-Executable::Executable(int size, char* argv[], bool preced, queue<string> &q){
+Executable::Executable(int size, char* argv[], bool preced){
   this->ran = false;
   this->size = size;
   this->preced = preced;
-  this->q = q;
   int i = 0;
   args = new char*[500];
   for (i = 0; i < size; ++i){
@@ -33,14 +33,29 @@ Executable::~Executable(){
 /*executes the command using
 execvp, fork and waitpid */
 bool Executable::execute(bool b){
+  cout << "args: " << args[1] << endl;
   bool ret = true;
   if (ran){
+    cout << "ran" << endl;
     return false;
   }
   else {
     this->ran = true; //sets if it has been ran or not
   }
-  
+  if (preced){
+    // string temp;
+    // temp = Q.front();
+    // Q.pop();
+    // cout << "temp: " << temp << endl;
+    // cout << "front: " << Q.front() << Q.size() << endl;
+    Executioner* e = new Executioner(Q.front());
+    bool result = e->execute(false);
+    // cout << "re" << result << endl;
+    Q.pop();
+    perror("Q");
+    delete e;
+    return result;
+  }
   if (strcmp(args[0], "exit") == 0){ // if the command is exit, it exits
     exit(0);
   }
@@ -71,11 +86,10 @@ bool Executable::execute(bool b){
   return ret;
 }
 
-Test::Test(int size, char* argv[], bool preced, queue<string> &q){
+Test::Test(int size, char* argv[], bool preced){
   this->ran = false;
   this->size = size;
   this->preced = preced;
-  this->q = q;
   int i = 0;
   args = new char*[500];
   for (i = 0; i < size; ++i){

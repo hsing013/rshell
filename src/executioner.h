@@ -9,6 +9,7 @@ class Executioner : public Base{
     string input;
   public:
     Executioner(string input);
+    ~Executioner() {};
     bool execute(bool b);
 };
 

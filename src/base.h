@@ -17,9 +17,8 @@ class Executable : public Base{
     bool ran; //false if is not been executed, true if otherwise
     bool preced;
     char** args;
-    queue<string> q;
   public:
-    Executable(int size, char* argv[], bool preced, queue<string> &q);
+    Executable(int size, char* argv[], bool preced);
     ~Executable();
     bool execute(bool b);
 };
@@ -30,9 +29,8 @@ class Test : public Base{
     bool ran;
     bool preced;
     char** args;
-    queue<string> q;
   public:
-    Test(int size, char* argv[],bool preced, queue<string> &q);
+    Test(int size, char* argv[],bool preced);
     ~Test();
     bool execute(bool b);
 };
