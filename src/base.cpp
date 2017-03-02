@@ -33,7 +33,7 @@ Executable::~Executable(){
 /*executes the command using
 execvp, fork and waitpid */
 bool Executable::execute(bool b){
-  cout << "args: " << args[1] << endl;
+  // cout << "args: " << args[1] << endl;
   bool ret = true;
   if (ran){
     cout << "ran" << endl;
@@ -43,23 +43,23 @@ bool Executable::execute(bool b){
     this->ran = true; //sets if it has been ran or not
   }
   if (preced){
-    // string temp;
-    // temp = Q.front();
-    // Q.pop();
+    string temp;
+    temp = Q.front();
+    Q.pop();
     // cout << "temp: " << temp << endl;
     // cout << "front: " << Q.front() << Q.size() << endl;
-    Executioner* e = new Executioner(Q.front());
+    Executioner* e = new Executioner(temp);
     bool result = e->execute(false);
-    // cout << "re" << result << endl;
-    Q.pop();
-    perror("Q");
+    cout << "re" << result << endl;
+    
+    // perror("Q");
+    // cout << Q.front() << endl;
     delete e;
     return result;
   }
   if (strcmp(args[0], "exit") == 0){ // if the command is exit, it exits
     exit(0);
   }
-
   pid_t pid = fork(); //creates child process
 
   if (pid == -1){ //to handle fork error
@@ -82,7 +82,7 @@ bool Executable::execute(bool b){
       ret = false;
     }
   }
-  // cout << "ret: " << ret << endl;
+  cout << "ret: " << ret << endl;
   return ret;
 }
 

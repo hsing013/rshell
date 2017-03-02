@@ -50,11 +50,22 @@ bool Executioner::execute(bool b){
   bool counter = false; // remains true until next command is found
   args[i] = NULL;
   int size = i + 1; //holds the size of the array
+  // cout << "size of array: " << size << endl;
   int j = 0; //holds the current index of the array
   bool testType = false; //true if a test is detected
   bool precedType = false; //true if parantheses are present
+  int skip = 0;
   for (int i = 0; i < size; ++i){ // makes each command and its arguements into an Executable
+    // cout << "--------------------------------LOOP" << i << endl;
+    // if (i == size){
+    //   cout << "TRIGGERED" << endl;
+    //   continue;
+    // }
     c = args[i];
+    // if (args[i] != NULL){
+    //   cout << args[i] << endl;
+    // // cout << "skip: " << skip << ", " << precedType << " " << i << endl;
+    // }
      if (((!counter) && strcmp(c, temp[3]) == 0) || (!counter && strcmp(c, "test") == 0)){
       counter = true;
       testType = true;
@@ -83,10 +94,9 @@ bool Executioner::execute(bool b){
       precedType = false;
       break;
     }
-    else if (strcmp(c, temp[1]) == 0){ // makes an Executable that has the orConnector
-      // cout << "nor" << endl;
+    else if (strcmp(c, temp[1]) == 0 && !precedType){ // makes an Executable that has the orConnector
+      cout << "nor" << endl;
       argc[j + 1] = NULL;
-      cout << argc[0] << endl;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
         connect.push_back("||");
@@ -100,7 +110,7 @@ bool Executioner::execute(bool b){
       counter = false;
       j = 0;
     }
-    else if (strcmp(c, temp[2]) == 0){ // makes an Executable that has a semicolon connecter
+    else if (strcmp(c, temp[2]) == 0 && !precedType){ // makes an Executable that has a semicolon connecter
       // cout << "semi" << endl;
       argc[j + 1] = NULL;
       if (!testType){
@@ -116,7 +126,7 @@ bool Executioner::execute(bool b){
       counter = false;
       j = 0;
     }
-    else if (strcmp(c, temp[0]) == 0){ // makes an Executable that has andConnector
+    else if (strcmp(c, temp[0]) == 0 && !precedType){ // makes an Executable that has andConnector
       // cout << "amd" << argc[1] << endl;
       argc[j + 1] = NULL;
       if (!testType){
@@ -132,11 +142,65 @@ bool Executioner::execute(bool b){
       counter = false;
       j = 0;
     }
+    else if (strcmp(c, "(") == 0 && precedType){
+      // cout << "--------------------ADD" << endl;
+      ++skip;
+    }
+    else if (strcmp(c, ")") == 0 && precedType && skip != 0){
+      argc[j] = c;
+      ++j;
+      --skip;
+    }
+    else if ((strcmp(c, ")") == 0) && (precedType != false) && (skip == 0)){
+      // cout << "PREC" << endl;
+      argc[j + 1] = NULL;
+      if (i + 1 != size){
+        // cout << "in" << endl;
+        string strTemp;
+        const char* ch = args[i + 1];
+        if (ch != NULL){
+          strTemp.append(ch);
+        }
+        else{
+          strTemp = ";";
+        }
+        // cout << i + 1 << endl;
+        // cout << "hello" << endl;
+        if (strTemp == ";" || ch == NULL){
+          connect.push_back(";");
+        }
+        else if (strTemp == "&&"){
+           connect.push_back("&&");
+        }
+        else if (strTemp == "||"){
+           connect.push_back("||");
+        }
+        // cout << "l" << endl;
+        execs.push_back(new Executable(j, argc, precedType));
+        precedType = false;
+        counter = false;
+        j = 0;
+        ++i;
+        cout << i << endl;
+      }
+      else{
+        execs.push_back(new Executable(j, argc, precedType));
+        connect.push_back(";");
+        precedType = false;
+        counter = false;
+        j = 0;
+      }
+      // cout << "out" << endl;
+    }
     else{
+      // cout << "else" << endl;
       argc[j] = c;
       ++j;
     }
   }
+  // cout << "I am here" << endl;
+  cout << "size: " << execs.size() << endl;
+  // return false;
   delete[] args; //deallocate memory
   delete[] argc; //deallocate memory
   vector<Base*> destroy; // holds connectors that are to be destroyed later

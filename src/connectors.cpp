@@ -41,13 +41,14 @@ and if child2 executes, send true
 if b is true, return false as that
 indicates that child1 has been executed */
 bool orConnector::execute(bool b){
+  cout << "he" << endl;
   bool result = b;
   bool result2 = false;
   if (result){
-    return false;
+    return true;
   }
   else if (child1->execute(false)){
-    return false;
+    return true;
   }
   else if (child2->execute(false)){
     return true;
