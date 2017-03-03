@@ -26,7 +26,6 @@ bool Executioner::execute(bool b){
   if (input.size() == 0){ // returns if input is 0
     return false;
   }
-  // cout << "in: " << input << endl;
   vector<Base*> execs; //holds the executables;
   vector<string> connect; //holds the connectors;
   char const* temp[6];      //holds connectors for comparison
@@ -56,23 +55,13 @@ bool Executioner::execute(bool b){
   bool precedType = false; //true if parantheses are present
   int skip = 0;
   for (int i = 0; i < size; ++i){ // makes each command and its arguements into an Executable
-    // cout << "--------------------------------LOOP" << i << endl;
-    // if (i == size){
-    //   cout << "TRIGGERED" << endl;
-    //   continue;
-    // }
     c = args[i];
-    // if (args[i] != NULL){
-    //   cout << args[i] << endl;
-    // // cout << "skip: " << skip << ", " << precedType << " " << i << endl;
-    // }
      if (((!counter) && strcmp(c, temp[3]) == 0) || (!counter && strcmp(c, "test") == 0)){
       counter = true;
       testType = true;
     }
     else if (!counter){
       if (strcmp(args[i], "(") == 0){
-        // cout << "hoop" << endl;
         precedType = true;
       }
       argc[j] = c;
@@ -80,7 +69,6 @@ bool Executioner::execute(bool b){
       ++j;
     }
     else if (c == NULL){ // makes an Executable that has no connector
-      // cout << "no" << endl;
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
@@ -111,7 +99,6 @@ bool Executioner::execute(bool b){
       j = 0;
     }
     else if (strcmp(c, temp[2]) == 0 && !precedType){ // makes an Executable that has a semicolon connecter
-      // cout << "semi" << endl;
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
@@ -127,7 +114,6 @@ bool Executioner::execute(bool b){
       j = 0;
     }
     else if (strcmp(c, temp[0]) == 0 && !precedType){ // makes an Executable that has andConnector
-      // cout << "amd" << argc[1] << endl;
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
@@ -143,7 +129,6 @@ bool Executioner::execute(bool b){
       j = 0;
     }
     else if (strcmp(c, "(") == 0 && precedType){
-      // cout << "--------------------ADD" << endl;
       ++skip;
     }
     else if (strcmp(c, ")") == 0 && precedType && skip != 0){
@@ -152,10 +137,8 @@ bool Executioner::execute(bool b){
       --skip;
     }
     else if ((strcmp(c, ")") == 0) && (precedType != false) && (skip == 0)){
-      // cout << "PREC" << endl;
       argc[j + 1] = NULL;
       if (i + 1 != size){
-        // cout << "in" << endl;
         string strTemp;
         const char* ch = args[i + 1];
         if (ch != NULL){
@@ -164,8 +147,6 @@ bool Executioner::execute(bool b){
         else{
           strTemp = ";";
         }
-        // cout << i + 1 << endl;
-        // cout << "hello" << endl;
         if (strTemp == ";" || ch == NULL){
           connect.push_back(";");
         }
@@ -175,13 +156,11 @@ bool Executioner::execute(bool b){
         else if (strTemp == "||"){
            connect.push_back("||");
         }
-        // cout << "l" << endl;
         execs.push_back(new Executable(j, argc, precedType));
         precedType = false;
         counter = false;
         j = 0;
         ++i;
-        cout << i << endl;
       }
       else{
         execs.push_back(new Executable(j, argc, precedType));
@@ -190,17 +169,12 @@ bool Executioner::execute(bool b){
         counter = false;
         j = 0;
       }
-      // cout << "out" << endl;
     }
     else{
-      // cout << "else" << endl;
       argc[j] = c;
       ++j;
     }
   }
-  // cout << "I am here" << endl;
-  cout << "size: " << execs.size() << endl;
-  // return false;
   delete[] args; //deallocate memory
   delete[] argc; //deallocate memory
   vector<Base*> destroy; // holds connectors that are to be destroyed later

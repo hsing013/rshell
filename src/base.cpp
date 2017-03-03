@@ -33,7 +33,6 @@ Executable::~Executable(){
 /*executes the command using
 execvp, fork and waitpid */
 bool Executable::execute(bool b){
-  // cout << "args: " << args[1] << endl;
   bool ret = true;
   if (ran){
     cout << "ran" << endl;
@@ -46,14 +45,8 @@ bool Executable::execute(bool b){
     string temp;
     temp = Q.front();
     Q.pop();
-    // cout << "temp: " << temp << endl;
-    // cout << "front: " << Q.front() << Q.size() << endl;
     Executioner* e = new Executioner(temp);
     bool result = e->execute(false);
-    cout << "re" << result << endl;
-    
-    // perror("Q");
-    // cout << Q.front() << endl;
     delete e;
     return result;
   }
@@ -82,7 +75,6 @@ bool Executable::execute(bool b){
       ret = false;
     }
   }
-  cout << "ret: " << ret << endl;
   return ret;
 }
 
@@ -120,7 +112,6 @@ bool Test::execute(bool b){
   }
   else{
     flag = args[i];
-    // cout << "f: " << flag << endl;
   }
   struct stat sb;
   int status = stat(args[i + 1], &sb);

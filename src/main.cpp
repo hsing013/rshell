@@ -58,8 +58,6 @@ int main(){
       Q = precedenceParser(input);
       addSpaceParan(input);
     }
-    cout << input << endl;
-    // return 0;
     Executioner * e = new Executioner(input);
     e->execute(false);
     delete e;
@@ -78,7 +76,6 @@ void commentCheck(string &input){
       break;
     }
   }
-  // cout << input << endl;
 }
 
 /*finds any semicolon and adds a
@@ -126,32 +123,18 @@ pair<bool, bool> checkInput(string &input, char c, char c2){
 }
 
 void addSpaceParan(string &input){
-  char rightParan = '(';
-  char leftParan = ')';
-  vector<int> index;  // holds where the parantheses appear
-  for (unsigned i = 0; i < input.size(); ++i){
-    if(input.at(i) == leftParan){
-     index.push_back(i);
+  for(unsigned  i = input.size() - 1; i >= 0; i--) {
+    if(input.at(i) == ')') {
+      if(i != input.size() - 1 && input.at(i + 1) != ' ')
+        input.insert(i + 1, " ");
+      input.insert(i, " ");
     }
+    if(input.at(i) == '(')
+      input.insert(i + 1, " ");
+  if(i == 0)
+    break;
   }
-  for (unsigned i = 0; i < index.size(); ++i){
-    input.insert(index.at(i), " ");
-    if (i + 1 != index.size()){
-      index.at(i + 1) += 1;
-    }
-  }
-  index.resize(0);
-  for (unsigned i = 0; i < input.size(); ++i){
-    if(input.at(i) == rightParan){
-      index.push_back(i + 1);
-    }
-  }
-  for (unsigned i = 0; i < index.size(); ++i){
-    input.insert(index.at(i), " ");
-    if (i + 1 != index.size()){
-      index.at(i + 1) += 1;
-    }
-  }
+
 }
 
 queue<string> precedenceParser(string input){
@@ -174,7 +157,6 @@ queue<string> precedenceParser(string input){
         else if (input.at(i) == leftParan && skip == 0){
           end = i - start;
           string temp = input.substr(start, end);
-          cout << "q: " << temp << endl;
           addSpaceParan(temp);
           q.push(temp);
           break;
