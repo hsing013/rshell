@@ -14,6 +14,10 @@
 #include "executioner.h"
 using namespace std;
 
+/*this queue is global
+so it can be used across
+several classes. Contains
+substring that are to be executed */
 queue<string> Q;
 
 void execution(string input); // carrys out the execution of the input
@@ -127,12 +131,12 @@ void addSpaceParan(string &input){
     if(input.at(i) == ')') {
       if(i != input.size() - 1 && input.at(i + 1) != ' ')
         input.insert(i + 1, " ");
-      input.insert(i, " ");
+        input.insert(i, " ");
     }
     if(input.at(i) == '(')
       input.insert(i + 1, " ");
-  if(i == 0)
-    break;
+    if(i == 0)
+      break;
   }
 
 }

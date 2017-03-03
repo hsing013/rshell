@@ -14,7 +14,8 @@
 #include <pwd.h>
 using namespace std;
 
-extern queue<string> Q;
+
+extern queue<string> Q; 
 
 Executioner::Executioner(string input){
   this->input = input;
@@ -28,13 +29,6 @@ bool Executioner::execute(bool b){
   }
   vector<Base*> execs; //holds the executables;
   vector<string> connect; //holds the connectors;
-  char const* temp[6];      //holds connectors for comparison
-  temp[0] = "&&";
-  temp[1] = "||";
-  temp[2] = ";";
-  temp[3] = "[";
-  temp[4] = "op";
-  temp[5] = NULL;
   int sizeOfArray = input.size() + 1;
   char** args = new char*[sizeOfArray];
   char* c = const_cast<char*>(input.c_str()); // makes the string volatile to put into char* cs
@@ -49,26 +43,31 @@ bool Executioner::execute(bool b){
   bool counter = false; // remains true until next command is found
   args[i] = NULL;
   int size = i + 1; //holds the size of the array
-  // cout << "size of array: " << size << endl;
   int j = 0; //holds the current index of the array
   bool testType = false; //true if a test is detected
   bool precedType = false; //true if parantheses are present
   int skip = 0;
   for (int i = 0; i < size; ++i){ // makes each command and its arguements into an Executable
-    c = args[i];
-     if (((!counter) && strcmp(c, temp[3]) == 0) || (!counter && strcmp(c, "test") == 0)){
+    string s;
+    if (args[i] != NULL){
+      s.append(args[i]);
+    }
+    else{
+      s = "NULL";
+    }
+    if (((!counter) && s == "[") || (!counter && s == "test")){
       counter = true;
       testType = true;
     }
     else if (!counter){
-      if (strcmp(args[i], "(") == 0){
+      if (s == "("){
         precedType = true;
       }
-      argc[j] = c;
+      argc[j] = args[i];
       counter = true;
       ++j;
     }
-    else if (c == NULL){ // makes an Executable that has no connector
+    else if (s == "NULL"){ // makes an Executable that has no connector
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
@@ -82,8 +81,7 @@ bool Executioner::execute(bool b){
       precedType = false;
       break;
     }
-    else if (strcmp(c, temp[1]) == 0 && !precedType){ // makes an Executable that has the orConnector
-      cout << "nor" << endl;
+    else if (s == "||" && !precedType){ // makes an Executable that has the orConnector
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
@@ -98,7 +96,7 @@ bool Executioner::execute(bool b){
       counter = false;
       j = 0;
     }
-    else if (strcmp(c, temp[2]) == 0 && !precedType){ // makes an Executable that has a semicolon connecter
+    else if (s == ";" && !precedType){ // makes an Executable that has a semicolon connecter
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
@@ -113,7 +111,7 @@ bool Executioner::execute(bool b){
       counter = false;
       j = 0;
     }
-    else if (strcmp(c, temp[0]) == 0 && !precedType){ // makes an Executable that has andConnector
+    else if (s == "&&" && !precedType){ // makes an Executable that has andConnector
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
@@ -128,15 +126,15 @@ bool Executioner::execute(bool b){
       counter = false;
       j = 0;
     }
-    else if (strcmp(c, "(") == 0 && precedType){
+    else if (s == "(" && precedType){ 
       ++skip;
     }
-    else if (strcmp(c, ")") == 0 && precedType && skip != 0){
+    else if (s == ")" && precedType && skip != 0){
       argc[j] = c;
       ++j;
       --skip;
     }
-    else if ((strcmp(c, ")") == 0) && (precedType != false) && (skip == 0)){
+    else if (s == ")" && (precedType != false) && (skip == 0)){ //makes an executable with a substring that has parantheses around it
       argc[j + 1] = NULL;
       if (i + 1 != size){
         string strTemp;
@@ -156,14 +154,25 @@ bool Executioner::execute(bool b){
         else if (strTemp == "||"){
            connect.push_back("||");
         }
-        execs.push_back(new Executable(j, argc, precedType));
+
+        if (!testType){
+          execs.push_back(new Executable(j, argc, precedType));
+        }
+        else{
+          execs.push_back(new Test(j, argc, precedType));
+        }
         precedType = false;
         counter = false;
         j = 0;
         ++i;
       }
       else{
-        execs.push_back(new Executable(j, argc, precedType));
+        if (!testType){
+          execs.push_back(new Executable(j, argc, precedType));
+        }
+        else{
+          execs.push_back(new Test(j, argc, precedType));
+        }
         connect.push_back(";");
         precedType = false;
         counter = false;
@@ -171,7 +180,10 @@ bool Executioner::execute(bool b){
       }
     }
     else{
-      argc[j] = c;
+      if (s == "[" || s == "test"){
+        testType = true;
+      }
+      argc[j] = args[i];
       ++j;
     }
   }

@@ -17,13 +17,11 @@ bool andConnector::execute(bool b){
   bool result = b;
   bool result2 = false;
   if (b){
-    result2 = child2->execute(false);
+    result2 = child2->execute(true);
   }
   else{
-    result = child1->execute(false);
-    if(result != false){
-      result2 = child2->execute(false);
-    }
+    result = child1->execute(true);
+    result2 = child2->execute(result);
   }
   return result && result2;
 }
@@ -41,19 +39,15 @@ and if child2 executes, send true
 if b is true, return false as that
 indicates that child1 has been executed */
 bool orConnector::execute(bool b){
-  cout << "he" << endl;
-  bool result = b;
+  bool result = false;
   bool result2 = false;
-  if (result){
+  if (b){
     return true;
   }
-  else if (child1->execute(false)){
-    return true;
-  }
-  else if (child2->execute(false)){
-    return true;
-  }
-  return (result || result2); //always sends back false
+  result = child1->execute(true);
+  result2 = child2->execute(!result);
+  
+  return (result || result2); 
 }
 
 noneConnector::noneConnector(Base* a){
@@ -63,6 +57,6 @@ noneConnector::noneConnector(Base* a){
 and send it back */
 noneConnector::~noneConnector(){}
 bool noneConnector::execute(bool b){
-  bool result = child1->execute(false);
+  bool result = child1->execute(true);
   return result;
 }

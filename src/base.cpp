@@ -35,13 +35,24 @@ execvp, fork and waitpid */
 bool Executable::execute(bool b){
   bool ret = true;
   if (ran){
-    cout << "ran" << endl;
     return false;
   }
   else {
     this->ran = true; //sets if it has been ran or not
   }
-  if (preced){
+
+  if (!b){
+    if (preced){
+      Q.pop();
+    }
+    return false;
+  }
+
+  /*If it enclosed within paranthese, then
+    it makes a new instance of Executioner
+    and passes in a string from a queue
+    to be ran */
+  if (preced){ 
     string temp;
     temp = Q.front();
     Q.pop();
@@ -96,6 +107,30 @@ Test::~Test(){
 bool Test::execute(bool b){
   int i = 0;
   string flag;
+  if (ran){
+    return false;
+  }
+  else {
+    this->ran = true; //sets if it has been ran or not
+  }
+
+  if (!b){
+    if (preced){
+      Q.pop();
+    }
+    return false;
+  }
+
+  if (preced){ 
+    string temp;
+    temp = Q.front();
+    Q.pop();
+    Executioner* e = new Executioner(temp);
+    bool result = e->execute(false);
+    delete e;
+    return result;
+  }
+
   for (i = 0; i < size; ++i){
     if (strcmp(args[i], "-e") == 0){
       break;

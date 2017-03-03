@@ -1,6 +1,6 @@
 all:
 	mkdir -p bin
-	g++ -Wall -Werror -ansi -pedantic ${PWD}/src/main.cpp ${PWD}/src/base.cpp ${PWD}/src/connectors.cpp -o ${PWD}/bin/rshell
+	g++ -Wall -Werror -ansi -pedantic ${PWD}/src/main.cpp ${PWD}/src/base.cpp ${PWD}/src/connectors.cpp ${PWD}/src/executioner.cpp -o ${PWD}/bin/rshell
 
 rshell:
 	mkdir -p bin

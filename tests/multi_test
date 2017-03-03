@@ -9,4 +9,14 @@ mkdir testable && rm -r testable
 mkdir testable && rm -r testable || touch blah && rm blah
 echo magic && echo hogwarts || echo speed && history
 mkdir && ls Bill && ps
+echo A && echo B
+echo A || echo B
+echo A; echo B
+ls -j && echo A
+ls -j || echo A
+ls -j; echo A
+ls -j && echo A || echo B
+echo A || echo B || echo C
+echo A || echo B && echo C
+echo A && echo B && echo C
 exit
