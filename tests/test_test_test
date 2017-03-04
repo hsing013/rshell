@@ -1,0 +1,14 @@
+test -e main.cpp && echo exist
+test -d /home/harsh && echo exist
+[ -e main.cpp ] && echo main.cpp exists
+test -d main.cpp || echo directory does not exist
+[ -f main.cpp ] && echo file main.cpp exists
+mkdir rtest
+touch rtest1.cpp
+test -d rtest && echo directory rtest exists
+test -f rtest1.cpp && echo rtest1.cpp exists
+rm rtest1.cpp
+rm -r rtest
+[ -d rtest ] || echo rtest does not exist
+test -f rtest1.cpp || echo rtest1.cpp does not exist
+exit

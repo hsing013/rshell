@@ -33,11 +33,11 @@ orConnector::orConnector(Base* a, Base* b){
 
 orConnector::~orConnector(){}
 
-/*if child1 executes, send false
-if child1 fails, execute child2 
-and if child2 executes, send true 
-if b is true, return false as that
-indicates that child1 has been executed */
+/*returns the OR of both commands
+  child2 is passed in the result of
+  child1, where if the value passed in
+  was true then child2 returns false 
+  else returns true */
 bool orConnector::execute(bool b){
   bool result = false;
   bool result2 = false;

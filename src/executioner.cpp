@@ -134,7 +134,7 @@ bool Executioner::execute(bool b){
       ++j;
       --skip;
     }
-    else if (s == ")" && (precedType != false) && (skip == 0)){ //makes an executable with a substring that has parantheses around it
+    else if (s == ")" && (precedType != false) && (skip == 0)){ //makes an executable or a test with a substring that has parantheses around it
       argc[j + 1] = NULL;
       if (i + 1 != size){
         string strTemp;
@@ -180,7 +180,7 @@ bool Executioner::execute(bool b){
       }
     }
     else{
-      if (s == "[" || s == "test"){
+      if ((s == "[" || s == "test") && precedType){
         testType = true;
       }
       argc[j] = args[i];
@@ -241,5 +241,5 @@ bool Executioner::execute(bool b){
   for (unsigned i = 0; i < destroy.size(); ++i){ //deallocate memory
     delete destroy.at(i);
   }
-  return finalResult;
+  return finalResult; //sends back the result of the last command, useful for precedence
 }

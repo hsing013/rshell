@@ -48,4 +48,14 @@ Bugs
 
 -The command cd doesn't work, it throws an error.
 
--Having more than two symbols, for example "ls -a &&& echo hello", will through an error
+-Having more than two symbols, for example "ls -a &&& echo hello", will return an error
+
+-The syntax for test has to be "test -e /home/path/file" or "[ -e /home/path/file ]" or 
+ "test /home/path/file" or "[ /home/path/file ]" or else it will return false. Flags can
+ -e or -d or -f or none but the brackets must be surronded by a whitespace.
+
+-Parantheses that are 3 level deep may or may not work correctly. For example, 
+ "(((ls -a)) || ((echo Bill)) && (echo Gates))" will be wrong as it will trigger
+ ls -a and echo Bill. But for example, "(((ls -a))) || (((echo Steve)))" will work correctly.
+
+-There must be space after a semicolon or else there will be an error.

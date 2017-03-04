@@ -1,0 +1,18 @@
+(echo hello)
+(echo hello && ls -a) || echo A
+echo A || (ls -j && ls -a) || echo B
+(ps && ls) || (echo man && echo boy)
+(echo man) || (echo boy)
+((echo man && echo boy) || (echo Bill && echo Gates)) && ls -a
+(echo man && echo boy) || (echo Steve && echo Jobs)
+((ls) || (ps)) && mkdir rtest && echo created rtest
+(ls && rm -r testdir) && echo removed rtest
+(ps;ls) || (ls)
+(test -e /home/harsh/) && (([ -d /home/harsh ]))
+(((ls -a))) || (((echo man)))
+(((ls -a)) || ((echo man)))
+(((ls -a))) && (((echo man)))
+(((ls -a)) && ((echo man)))
+((echo man) || echo boy)
+(test -f main.cpp)
+exit

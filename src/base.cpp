@@ -40,18 +40,24 @@ bool Executable::execute(bool b){
   else {
     this->ran = true; //sets if it has been ran or not
   }
-
-  if (!b){
+  /*if b is false, then that
+    means previous AND child didnt 
+    execute or it can mean that previous
+    OR child did execute*/
+  if (!b){  
     if (preced){
       Q.pop();
     }
     return false;
   }
-
+  
+  if (strcmp(args[0], "exit") == 0){ // if the command is exit, it exits
+    exit(0);
+  }
   /*If it enclosed within paranthese, then
     it makes a new instance of Executioner
     and passes in a string from a queue
-    to be ran */
+    to be ran and the sends back the result */
   if (preced){ 
     string temp;
     temp = Q.front();
@@ -61,9 +67,7 @@ bool Executable::execute(bool b){
     delete e;
     return result;
   }
-  if (strcmp(args[0], "exit") == 0){ // if the command is exit, it exits
-    exit(0);
-  }
+ 
   pid_t pid = fork(); //creates child process
 
   if (pid == -1){ //to handle fork error
@@ -120,7 +124,10 @@ bool Test::execute(bool b){
     }
     return false;
   }
-
+  /*If it enclosed within paranthese, then
+    it makes a new instance of Executioner
+    and passes in a string from a queue
+    to be ran and the sends back the result */
   if (preced){ 
     string temp;
     temp = Q.front();
@@ -131,7 +138,7 @@ bool Test::execute(bool b){
     return result;
   }
 
-  for (i = 0; i < size; ++i){
+  for (i = 0; i < size; ++i){ //checks for flags
     if (strcmp(args[i], "-e") == 0){
       break;
     }
@@ -142,20 +149,20 @@ bool Test::execute(bool b){
       break;
     }
   }
-  if (i >= size - 1){
+  if (i >= size - 1){ //if no flag exists makes i = -1
     i = -1;
   }
   else{
     flag = args[i];
   }
-  struct stat sb;
-  int status = stat(args[i + 1], &sb);
+  struct stat sb; //uses stat for test
+  int status = stat(args[i + 1], &sb); //calls stats
   if (status == -1){
-    perror("stat");
+    perror("stat"); 
     cout << "(False)" << endl;
     return false;
   }
-  if (flag == "-d"){
+  if (flag == "-d"){ //if flag -d was set
     if (S_ISDIR(sb.st_mode)){
       cout << "(TRUE)" << endl;
       return true;
@@ -165,7 +172,7 @@ bool Test::execute(bool b){
       return false;
     }
   }
-  else if (flag == "-f"){
+  else if (flag == "-f"){ //if flag -f was set
     if (S_ISREG(sb.st_mode)){
       cout << "(TRUE)" << endl;
       return true;
@@ -174,8 +181,8 @@ bool Test::execute(bool b){
       cout << "(False)" << endl;
       return false;
     }
-  }
-  else {
+  } 
+  else { //if none or -e flag was set
     cout << "(TRUE)" << endl;
     return true;
   }

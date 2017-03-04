@@ -65,6 +65,8 @@ int main(){
     Executioner * e = new Executioner(input);
     e->execute(false);
     delete e;
+    queue<string> empty;
+    swap(Q, empty); //emptying the queue
   }
 }
 
@@ -102,6 +104,9 @@ void semicolonExtend(string &input){
   }
 }
 
+/*checks if the input has the correct
+  amount of parantheses and if any
+  and returns a pair with both booleans */
 pair<bool, bool> checkInput(string &input, char c, char c2){
   int count = 0; //keeps count of '('
   int count2 = 0; //keeps count of ')'
@@ -141,6 +146,8 @@ void addSpaceParan(string &input){
 
 }
 
+/*puts all the substrings within a
+ parantheses onto the queue */
 queue<string> precedenceParser(string input){
   queue<string> q; //queue that stores all the strings with parantheses
   char rightParan = '(';
