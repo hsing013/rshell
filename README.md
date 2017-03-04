@@ -52,9 +52,9 @@ Bugs
 
 -Having more than two symbols, for example "ls -a &&& echo hello", will return an error
 
--The syntax for test has to be "test -e /home/path/file" or "[ -e /home/path/file ]" or 
- "test /home/path/file" or "[ /home/path/file ]" or else it will return false. Flags can
- -e or -d or -f or none but the brackets must be surronded by a whitespace.
+-The syntax for the test feature has to have a space in between the flags, test, and brackets.
+ CORRECT(examples): "test -e /home/path/file", "test -e main.cpp", "test main.cpp", "[ -e file ]", "[ /path/file ]
+ INCORRECT(examples): "test-e file", "test -e/home/path", "[-e file]", "[ -e file]"
 
 -Parantheses that are 3 level deep may or may not work correctly. For example, 
  "(((ls -a)) || ((echo Bill)) && (echo Gates))" will be wrong as it will trigger
