@@ -23,7 +23,7 @@ Installation
 
 2. cd rshell
 
-3. git checkout hw2
+3. git checkout hw3
 
 4. make
 
@@ -37,6 +37,8 @@ Features
 -It also has support for connectors such as "&&", "||", and ";"
 
 -It also supports the comment symbol, "#", which will comment out anything after it.
+
+-Added support for precedence and the test feature
 
 -Lastly, to exit the program, one simply types "exit"
 
