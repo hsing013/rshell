@@ -105,9 +105,6 @@ Test::Test(int size, char* argv[], bool preced){
   args[i] = NULL;
 }
 
-Test::~Test(){
-  delete[] args;
-}
 bool Test::execute(bool b){
   int i = 0;
   string flag;

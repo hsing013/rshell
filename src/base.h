@@ -18,20 +18,16 @@ class Executable : public Base{
     bool preced;
     char** args;
   public:
+    Executable() {};
     Executable(int size, char* argv[], bool preced);
     ~Executable();
     bool execute(bool b);
 };
 
-class Test : public Base{
-  private:
-    int size;
-    bool ran;
-    bool preced;
-    char** args;
+class Test : public Executable{
   public:
     Test(int size, char* argv[],bool preced);
-    ~Test();
+    ~Test() {};
     bool execute(bool b);
 };
 
