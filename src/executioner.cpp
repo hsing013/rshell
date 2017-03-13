@@ -17,13 +17,28 @@ using namespace std;
 
 extern queue<string> Q; 
 
+string fetchConnector(string s){
+  if (s == "&&"){
+    return "&&";
+  }
+  else if (s == "||"){
+    return "||";
+  }
+  else if (s == "|"){
+    return "|";
+  }
+  else{
+    return ";";
+  }
+}
+
 Executioner::Executioner(string input){
   this->input = input;
 }
 
 /*parses the input and then executes each
 command */
-bool Executioner::execute(bool b){
+bool Executioner::execute(int b, int b2){
   if (input.size() == 0){ // returns if input is 0
     return false;
   }
@@ -81,45 +96,15 @@ bool Executioner::execute(bool b){
       precedType = false;
       break;
     }
-    else if (s == "||" && !precedType){ // makes an Executable that has the orConnector
+    else if ((s == "||" || s == "&&" || s == ";" || s == "|") && !precedType){ // makes an Executable
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
-        connect.push_back("||");
+        connect.push_back(fetchConnector(s));
       }
       else{
         execs.push_back(new Test(j, argc, precedType));
-        connect.push_back("||");
-        testType = false;
-      }
-      precedType = false;
-      counter = false;
-      j = 0;
-    }
-    else if (s == ";" && !precedType){ // makes an Executable that has a semicolon connecter
-      argc[j + 1] = NULL;
-      if (!testType){
-        execs.push_back(new Executable(j, argc, precedType));
-        connect.push_back(";");
-      }
-      else{
-        execs.push_back(new Test(j, argc, precedType));
-        connect.push_back(";");
-        testType = false;
-      }
-      precedType = false;
-      counter = false;
-      j = 0;
-    }
-    else if (s == "&&" && !precedType){ // makes an Executable that has andConnector
-      argc[j + 1] = NULL;
-      if (!testType){
-        execs.push_back(new Executable(j, argc, precedType));
-        connect.push_back("&&");
-      }
-      else{
-        execs.push_back(new Test(j, argc, precedType));
-        connect.push_back("&&");
+        connect.push_back(fetchConnector(s));
         testType = false;
       }
       precedType = false;
@@ -145,14 +130,11 @@ bool Executioner::execute(bool b){
         else{
           strTemp = ";";
         }
-        if (strTemp == ";" || ch == NULL){
+        if (ch == NULL){
           connect.push_back(";");
         }
-        else if (strTemp == "&&"){
-           connect.push_back("&&");
-        }
-        else if (strTemp == "||"){
-           connect.push_back("||");
+        else{
+           connect.push_back(fetchConnector(strTemp));
         }
 
         if (!testType){
@@ -189,6 +171,7 @@ bool Executioner::execute(bool b){
   }
   delete[] args; //deallocate memory
   delete[] argc; //deallocate memory
+  vector<Pipe*> pipe; //holds pipe connectors
   vector<Base*> destroy; // holds connectors that are to be destroyed later
   vector<bool> results;
   bool previousResult = false; //holds the output of the last command, initial is false
@@ -196,7 +179,7 @@ bool Executioner::execute(bool b){
   for (unsigned i = 0; i < execs.size(); ++i, ++j){
     if (connect.at(i) == ";"){ //executes noneConnector commands
       noneConnector* nc = new noneConnector(execs.at(j));
-      previousResult = nc->execute(previousResult);
+      previousResult = nc->execute(previousResult, 1);
       results.push_back(previousResult);
       destroy.push_back(nc);
       previousResult = false;
@@ -204,23 +187,59 @@ bool Executioner::execute(bool b){
     else if (connect.at(i) == "&&"){ // executes andConnector commands
       if (i + 1 == execs.size()){
         cout << "Your input is incomplete e.g(echo hello &&   )" << endl;
-        break;
+        return false;
       }
       andConnector* ac = new andConnector(execs.at(j), execs.at(j + 1));
-      previousResult = ac->execute(previousResult);
+      previousResult = ac->execute(previousResult, 1);
       if (connect.at(j + 1) == ";"){
         connect.at(j + 1) = "done";
       }
       destroy.push_back(ac);
       results.push_back(previousResult);
     }
+    else if (connect.at(i) == "|"){ // executes Pipe connector commands
+      if (i + 1 == execs.size()){
+        cout << "Your input is incomplete e.g(ls |  )" << endl;
+        return false;
+      }
+      /*populates the pipe vector with pipe
+       *types. Each index, execept for the first one,
+       * uses the previous
+       *index as one of the childs thus ensuring
+       *a recursive function */
+      for (unsigned h = i; h < connect.size(); ++h){
+        if (connect.at(h) == "|" && pipe.size() == 0){
+          pipe.push_back(new Pipe(execs.at(h), execs.at(h + 1)));
+        }
+        else if (connect.at(h) == "|"){
+          if (h == connect.size() - 1){
+            cout << "Your input is incomplete e.g(ls |  )" << endl;
+            return false;
+          }
+          pipe.push_back(new Pipe(pipe.at(pipe.size()-1), execs.at(h + 1)));
+          ++i;
+          ++j;
+        }
+        else{
+          break;
+        }
+      }
+      Pipe* p = pipe.at(pipe.size() - 1);
+      previousResult = p->execute(previousResult, 1);
+      if (connect.at(j) == ";"){
+        connect.at(j) = "done";
+      }
+      destroy.push_back(p);
+      results.push_back(previousResult);
+      pipe.resize(0);
+    }
     else if (connect.at(i) == "||"){ // executes orConnector commands
       if (i + 1 == execs.size()){
         cout << "Your input is incomplete e.g(echo hello ||   )" << endl;
-        break;
+        return false;
       }
       orConnector* oc = new orConnector(execs.at(j), execs.at(j + 1));
-      previousResult = oc->execute(previousResult);
+      previousResult = oc->execute(previousResult, 1);
       if (connect.at(j + 1) == ";"){
         connect.at(j + 1) = "done";
       }

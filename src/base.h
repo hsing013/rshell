@@ -8,7 +8,7 @@ class Base{
   public:
     Base() {};
     virtual ~Base() {};
-    virtual bool execute(bool b) = 0;
+    virtual bool execute(int b, int b2) = 0;
 };
 
 class Executable : public Base{
@@ -21,14 +21,15 @@ class Executable : public Base{
     Executable() {};
     Executable(int size, char* argv[], bool preced);
     ~Executable();
-    bool execute(bool b);
+    bool execute(int b, int b2);
 };
 
 class Test : public Executable{
   public:
-    Test(int size, char* argv[],bool preced);
+    Test(int size, char* argv[], bool preced);
     ~Test() {};
-    bool execute(bool b);
+    bool execute(int b, int b2);
 };
+
 
 #endif

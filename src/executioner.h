@@ -10,7 +10,7 @@ class Executioner : public Base{
   public:
     Executioner(string input);
     ~Executioner() {};
-    bool execute(bool b);
+    bool execute(int b, int b2);
 };
 
 #endif

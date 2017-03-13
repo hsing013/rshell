@@ -7,9 +7,9 @@ class andConnector : public Base{
     Base* child1;
     Base* child2;
   public:
-    ~andConnector();
+    ~andConnector() {};
     andConnector(Base* a, Base* b);
-    bool execute(bool b);
+    bool execute(int b, int b2);
 };
 
 class orConnector : public Base{
@@ -17,20 +17,29 @@ class orConnector : public Base{
     Base* child1;
     Base* child2;
   public:
-    ~orConnector();
+    ~orConnector() {};
     orConnector(Base* a, Base* b);
-    bool execute(bool b);
+    bool execute(int b, int b2);
 };
 
 class noneConnector : public Base{
   private:
     Base* child1;
   public:
-    ~noneConnector();
+    ~noneConnector() {};
     noneConnector(Base* a);
-    bool execute(bool b);
+    bool execute(int b, int b2);
 };
 
+class Pipe : public Base{
+  private:
+    Base* child1;
+    Base* child2;
+  public:
+     ~Pipe() {};
+     Pipe(Base* a, Base* b);
+     bool execute(int b, int b2);
+};
 
 
 #endif

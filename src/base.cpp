@@ -32,7 +32,7 @@ Executable::~Executable(){
 
 /*executes the command using
 execvp, fork and waitpid */
-bool Executable::execute(bool b){
+bool Executable::execute(int b, int b2){
   bool ret = true;
   if (ran){
     return false;
@@ -44,7 +44,7 @@ bool Executable::execute(bool b){
     means previous AND child didnt 
     execute or it can mean that previous
     OR child did execute*/
-  if (!b){  
+  if (!b && b2 == -99){ 
     if (preced){
       Q.pop();
     }
@@ -63,7 +63,7 @@ bool Executable::execute(bool b){
     temp = Q.front();
     Q.pop();
     Executioner* e = new Executioner(temp);
-    bool result = e->execute(false);
+    bool result = e->execute(false, 0);
     delete e;
     return result;
   }
@@ -75,6 +75,14 @@ bool Executable::execute(bool b){
     ret = false;
   }
   else if (pid == 0){ //child process
+    if (dup2(b, 0) == -1){
+      perror("dup2");
+      return false;
+    }
+    if (dup2(b2, 1) == -1){
+      perror("dup2");
+      return false;
+    }
     if (execvp(args[0], args) == -1){
       perror("execvp");
       ret = false;
@@ -105,7 +113,7 @@ Test::Test(int size, char* argv[], bool preced){
   args[i] = NULL;
 }
 
-bool Test::execute(bool b){
+bool Test::execute(int b, int b2){
   int i = 0;
   string flag;
   if (ran){
@@ -130,7 +138,7 @@ bool Test::execute(bool b){
     temp = Q.front();
     Q.pop();
     Executioner* e = new Executioner(temp);
-    bool result = e->execute(false);
+    bool result = e->execute(false, 0);
     delete e;
     return result;
   }
@@ -185,3 +193,4 @@ bool Test::execute(bool b){
   }
   return false;
 }
+

@@ -63,7 +63,7 @@ int main(){
       addSpaceParan(input);
     }
     Executioner * e = new Executioner(input);
-    e->execute(false);
+    e->execute(false, 0);
     delete e;
     queue<string> empty;
     swap(Q, empty); //emptying the queue
