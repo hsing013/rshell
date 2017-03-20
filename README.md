@@ -40,6 +40,8 @@ Features
 
 -Added support for precedence and the test feature
 
+-Added support for redirection such as "<", ">", ">>", and "|"
+
 -Lastly, to exit the program, one simply types "exit"
 
 Bugs

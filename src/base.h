@@ -9,6 +9,7 @@ class Base{
     Base() {};
     virtual ~Base() {};
     virtual bool execute(int b, int b2) = 0;
+    virtual string fetchFile() = 0; //returns args[0], useful for I/0 redirection
 };
 
 class Executable : public Base{
@@ -22,6 +23,7 @@ class Executable : public Base{
     Executable(int size, char* argv[], bool preced);
     ~Executable();
     bool execute(int b, int b2);
+    string fetchFile();
 };
 
 class Test : public Executable{
@@ -29,6 +31,7 @@ class Test : public Executable{
     Test(int size, char* argv[], bool preced);
     ~Test() {};
     bool execute(int b, int b2);
+    string fetchFile();
 };
 
 

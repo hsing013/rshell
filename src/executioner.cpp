@@ -9,6 +9,7 @@
 #include <stdlib.h> // for exit
 #include <vector>
 #include <queue>
+#include <stack>
 #include <utility>
 #include <sys/types.h>
 #include <pwd.h>
@@ -27,6 +28,15 @@ string fetchConnector(string s){
   else if (s == "|"){
     return "|";
   }
+  else if (s == ">"){
+    return ">";
+  }
+  else if (s == "<"){
+    return "<";
+  }
+  else if (s == ">>"){
+    return ">>";
+  }
   else{
     return ";";
   }
@@ -34,6 +44,10 @@ string fetchConnector(string s){
 
 Executioner::Executioner(string input){
   this->input = input;
+}
+
+string Executioner::fetchFile(){
+  return "This is the Executioner.";
 }
 
 /*parses the input and then executes each
@@ -96,7 +110,7 @@ bool Executioner::execute(int b, int b2){
       precedType = false;
       break;
     }
-    else if ((s == "||" || s == "&&" || s == ";" || s == "|") && !precedType){ // makes an Executable
+    else if ((s == "||" || s == "&&" || s == ";" || s == "|" || s == "<" || s == ">" || s == ">>") && !precedType){ // makes an Executable
       argc[j + 1] = NULL;
       if (!testType){
         execs.push_back(new Executable(j, argc, precedType));
@@ -171,13 +185,14 @@ bool Executioner::execute(int b, int b2){
   }
   delete[] args; //deallocate memory
   delete[] argc; //deallocate memory
-  vector<Pipe*> pipe; //holds pipe connectors
+  stack<Base*> redirect; //holds connectors that perform redirection
   vector<Base*> destroy; // holds connectors that are to be destroyed later
   vector<bool> results;
   bool previousResult = false; //holds the output of the last command, initial is false
   j = 0;
   for (unsigned i = 0; i < execs.size(); ++i, ++j){
     if (connect.at(i) == ";"){ //executes noneConnector commands
+      cout << "triggered" << endl;
       noneConnector* nc = new noneConnector(execs.at(j));
       previousResult = nc->execute(previousResult, 1);
       results.push_back(previousResult);
@@ -197,26 +212,60 @@ bool Executioner::execute(int b, int b2){
       destroy.push_back(ac);
       results.push_back(previousResult);
     }
-    else if (connect.at(i) == "|"){ // executes Pipe connector commands
+    else if (connect.at(i) == "|" || connect.at(i) == "<" || connect.at(i) == ">" || connect.at(i) == ">>"){ // executes Pipe connector commands
       if (i + 1 == execs.size()){
         cout << "Your input is incomplete e.g(ls |  )" << endl;
         return false;
       }
-      /*populates the pipe vector with pipe
-       *types. Each index, execept for the first one,
-       * uses the previous
-       *index as one of the childs thus ensuring
-       *a recursive function */
+      /*puts all the connectors that perform redirection
+        onto a stack where each layer is connected to
+        one another */
       for (unsigned h = i; h < connect.size(); ++h){
-        if (connect.at(h) == "|" && pipe.size() == 0){
-          pipe.push_back(new Pipe(execs.at(h), execs.at(h + 1)));
+        if (connect.at(h) == "|" && redirect.empty()){
+          redirect.push(new Pipe(execs.at(h), execs.at(h + 1)));
+        }
+        else if (connect.at(h) == "<" && redirect.empty()){
+          redirect.push(new Input(execs.at(h), execs.at(h + 1)));
+        }
+        else if (connect.at(h) == ">" && redirect.empty()){
+          redirect.push(new Output(execs.at(h), execs.at(h + 1)));
+        }
+        else if (connect.at(h) == ">>" && redirect.empty()){
+          redirect.push(new Output2(execs.at(h), execs.at(h + 1)));
         }
         else if (connect.at(h) == "|"){
           if (h == connect.size() - 1){
             cout << "Your input is incomplete e.g(ls |  )" << endl;
             return false;
           }
-          pipe.push_back(new Pipe(pipe.at(pipe.size()-1), execs.at(h + 1)));
+          redirect.push(new Pipe(redirect.top(), execs.at(h + 1)));
+          ++i;
+          ++j;
+        }
+        else if (connect.at(h) == "<"){
+          if (h == connect.size() - 1){
+            cout << "Your input is incomplete e.g(ls |  )" << endl;
+            return false;
+          }
+          redirect.push(new Input(redirect.top(), execs.at(h + 1)));
+          ++i;
+          ++j;
+        }
+        else if (connect.at(h) == ">"){
+          if (h == connect.size() - 1){
+            cout << "Your input is incomplete e.g(ls |  )" << endl;
+            return false;
+          }
+          redirect.push(new Output(redirect.top(), execs.at(h + 1)));
+          ++i;
+          ++j;
+        }
+        else if (connect.at(h) == ">>"){
+          if (h == connect.size() - 1){
+            cout << "Your input is incomplete e.g(ls |  )" << endl;
+            return false;
+          }
+          redirect.push(new Output2(redirect.top(), execs.at(h + 1)));
           ++i;
           ++j;
         }
@@ -224,14 +273,17 @@ bool Executioner::execute(int b, int b2){
           break;
         }
       }
-      Pipe* p = pipe.at(pipe.size() - 1);
+      Base* p = redirect.top();
       previousResult = p->execute(previousResult, 1);
-      if (connect.at(j) == ";"){
-        connect.at(j) = "done";
+      int temp = connect.size();
+      if (j + 1 != temp && connect.at(j + 1) == ";"){
+        connect.at(j + 1) = "done";
       }
-      destroy.push_back(p);
       results.push_back(previousResult);
-      pipe.resize(0);
+      while (!redirect.empty()){
+        destroy.push_back(redirect.top());
+        redirect.pop();
+      }
     }
     else if (connect.at(i) == "||"){ // executes orConnector commands
       if (i + 1 == execs.size()){

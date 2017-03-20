@@ -11,6 +11,7 @@ class Executioner : public Base{
     Executioner(string input);
     ~Executioner() {};
     bool execute(int b, int b2);
+    string fetchFile();
 };
 
 #endif

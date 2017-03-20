@@ -30,6 +30,11 @@ Executable::~Executable(){
   delete[] args;
 }
 
+string Executable::fetchFile(){
+  string temp = args[0];
+  return temp;
+}
+
 /*executes the command using
 execvp, fork and waitpid */
 bool Executable::execute(int b, int b2){
@@ -50,7 +55,9 @@ bool Executable::execute(int b, int b2){
     }
     return false;
   }
-  
+  if (b2 == -99){
+    b2 = 1;
+  }
   if (strcmp(args[0], "exit") == 0){ // if the command is exit, it exits
     exit(0);
   }
@@ -111,6 +118,11 @@ Test::Test(int size, char* argv[], bool preced){
     this->args[i] = argv[i];
   }
   args[i] = NULL;
+}
+
+string Test::fetchFile(){
+  string temp = args[0];
+  return temp;
 }
 
 bool Test::execute(int b, int b2){
