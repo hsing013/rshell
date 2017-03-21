@@ -115,7 +115,7 @@ Input::Input(Base* a, Base* b){
 string Input::fetchFile(){
   return "This is the Input connector.";
 }
-
+/*handles the input redirection */
 bool Input::execute(int b, int b2){
   string file = child2->fetchFile();
   b = open(file.c_str(),O_RDONLY);
@@ -130,7 +130,7 @@ Output::Output(Base* a, Base* b){
 string Output::fetchFile(){
   return "This is the Output connector.";
 }
-
+/*handles the output redirection */
 bool Output::execute(int b, int b2){
   string file = child2->fetchFile();
   b2 = open(file.c_str(),O_WRONLY| O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
@@ -145,7 +145,7 @@ Output2::Output2(Base* a, Base* b){
 string Output2::fetchFile(){
   return "This is the Output2 connector.";
 }
-
+/*handles the append redirection*/
 bool Output2::execute(int b, int b2){
   string file = child2->fetchFile();
   b2 = open(file.c_str(), O_WRONLY | O_APPEND | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);

@@ -1,0 +1,11 @@
+ls -a > test.cpp
+ps > test.cpp
+echo jesus | wc > test.cpp
+echo Bill Gates >> test.cpp
+echo Harry Potter >> test.cpp
+echo Spongebob >> test.cpp
+ls | wc >> test.cpp
+cat < test.cpp > test2.cpp
+rm test.cpp
+rm test2.cpp
+exit

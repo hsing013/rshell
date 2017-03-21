@@ -1,0 +1,8 @@
+cat < test.cpp
+wc < test.cpp
+grep h < test.cpp
+grep b < test.cpp | wc
+cat < test.cpp > dummy.txt
+rm dummy.txt
+rm test.cpp
+exit

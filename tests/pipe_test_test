@@ -1,0 +1,12 @@
+ls | cat | wc
+ls | wc | cat
+ls | cat
+ls | wc
+ps | wc
+ps | cat
+echo Gandalf and Galadriel | wc
+echo jeSus > test.cpp
+cat < test.cpp | tr a-z A-Z > test2.cpp
+rm test.cpp
+rm test2.cpp
+exit

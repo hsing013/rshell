@@ -192,7 +192,6 @@ bool Executioner::execute(int b, int b2){
   j = 0;
   for (unsigned i = 0; i < execs.size(); ++i, ++j){
     if (connect.at(i) == ";"){ //executes noneConnector commands
-      cout << "triggered" << endl;
       noneConnector* nc = new noneConnector(execs.at(j));
       previousResult = nc->execute(previousResult, 1);
       results.push_back(previousResult);
